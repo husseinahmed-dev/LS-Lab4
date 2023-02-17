@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: large-systems-django
+spec:
+  containers:
+  - name: large-systems-django
+    image: ha33ona/python:main
+    ports:
+    - containerPort: 8000
