@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: large-systems-django-configmap
+  namespace: default
+data:
+  LARGE_SYSTEMS_DJANGO_CONFIGMAP_value1: very
+  LARGE_SYSTEMS_DJANGO_CONFIGMAP_value2: cool
