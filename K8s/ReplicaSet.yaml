@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: large-systems-django-replicaset
+  labels:
+    app: large-systems-django
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: large-systems-django
+      env: production
+  template:
+    metadata:
+      labels:
+        app: large-systems-django
+        env: production
+    spec:
+      containers:
+      - name: large-systems-django
+        image: ha33ona/python:main
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "1"
+          limits:
+            memory: "512Mi"
+            cpu: "1"
