@@ -1,0 +1,28 @@
+---
+- name: Build Stage
+  hosts: gitlab-runner
+  gather_facts: false
+  
+  vars:
+    CONTAINER_TEST_IMAGE: "{{ lookup('env', 'CONTAINER_TEST_IMAGE') }}"
+
+  tasks:
+    - name: Build Docker image
+      shell: |
+        docker build --pull -t {{ CONTAINER_TEST_IMAGE }} .
+      register: build_result
+
+    - name: Tag Docker image
+      shell: |
+        docker tag {{ CONTAINER_TEST_IMAGE }} ha33ona/{{ CONTAINER_TEST_IMAGE }}
+      register: tag_result
+      
+    - name: Push Docker image
+      shell: |
+        docker push ha33ona/{{ CONTAINER_TEST_IMAGE }}
+      register: push_result
+      
+    - name: Check results
+      fail:
+        msg: "Docker build, tag or push failed"
+      when: build_result.rc != 0 or tag_result.rc != 0 or push_result.rc != 0

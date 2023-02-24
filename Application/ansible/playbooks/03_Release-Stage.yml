@@ -1,0 +1,36 @@
+---
+- name: Release Stage
+  hosts: gitlab-runner
+  gather_facts: false
+  
+  vars:
+    CI_JOB_TOKEN: "{{ lookup('env', 'CI_JOB_TOKEN') }}"
+    CI_REGISTRY: "{{ lookup('env', 'CI_REGISTRY') }}"
+    CONTAINER_TEST_IMAGE: "{{ lookup('env', 'CONTAINER_TEST_IMAGE') }}"
+    CONTAINER_RELEASE_IMAGE: "{{ lookup('env', 'CONTAINER_RELEASE_IMAGE') }}"
+
+  tasks:
+    - name: Login to Docker registry
+      shell: |
+        docker login -u ha33ona -p {{ CI_JOB_TOKEN }} {{ CI_REGISTRY }}
+      register: login_result
+
+    - name: Pull Docker image
+      shell: |
+        docker pull ha33ona/{{ CONTAINER_TEST_IMAGE }}
+      register: pull_result
+
+    - name: Tag Docker image
+      shell: |
+        docker tag ha33ona/{{ CONTAINER_TEST_IMAGE }} ha33ona/{{ CONTAINER_RELEASE_IMAGE }}
+      register: tag_result
+
+    - name: Push Docker image
+      shell: |
+        docker push ha33ona/{{ CONTAINER_RELEASE_IMAGE }}
+      register: push_result
+
+    - name: Check results
+      fail:
+        msg: "Docker login, pull or push failed"
+      when: login_result.rc != 0 or pull_result.rc != 0 or tag_result.rc != 0 or push_result.rc != 0

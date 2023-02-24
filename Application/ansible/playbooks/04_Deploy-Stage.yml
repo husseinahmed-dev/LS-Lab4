@@ -1,0 +1,30 @@
+---
+- name: Clone and start Docker Compose
+  hosts: deployment-server
+  gather_facts: false
+
+  vars:
+    CI_JOB_TOKEN: "{{ lookup('env', 'CI_JOB_TOKEN') }}"
+    CI_REGISTRY: "{{ lookup('env', 'CI_REGISTRY') }}"
+    REPO_TOKEN: "{{ lookup('env', 'REPO_TOKEN') }}"
+
+  tasks:
+    - name: Login to Docker registry
+      shell: |
+        docker login -u ha33ona -p {{ CI_JOB_TOKEN }} {{ CI_REGISTRY }}
+      register: login_result
+
+    - name: Clone repository
+      shell: |
+        git clone http://gitlab-ci-token:{{ REPO_TOKEN }}@hussein.sne.com/gitlab-instance-610d8aec/hussein-repo.git
+      register: clone_result
+
+    - name: Start Docker Compose
+      shell: |
+        cd hussein-repo && docker-compose up -d
+      register: start_result
+
+    - name: Check results
+      fail:
+        msg: "Login, clone, or start failed"
+      when: login_result.rc != 0 or clone_result.rc != 0 or start_result.rc != 0

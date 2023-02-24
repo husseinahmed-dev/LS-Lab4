@@ -1,0 +1,65 @@
+---
+- name: Test Stage
+  hosts: gitlab-runner
+  gather_facts: false
+  
+  vars:
+    CONTAINER_TEST_IMAGE: "{{ lookup('env', 'CONTAINER_TEST_IMAGE') }}"
+    CONTAINER_COMPOSE_IMAGE: "{{ lookup('env', 'CONTAINER_COMPOSE_IMAGE') }}"
+    SUDO_PASS: "{{ lookup('env', 'SUDO_PASS') }}"
+
+  tasks:
+    - name: Pull Docker image
+      shell: |
+        docker pull ha33ona/{{ CONTAINER_TEST_IMAGE }}
+      register: pull_result
+
+    - name: Tag Docker image
+      shell: |
+        docker tag {{ CONTAINER_TEST_IMAGE }} {{ CONTAINER_COMPOSE_IMAGE }}
+      register: tag_result
+
+    - name: Run tests
+      shell: |
+        make test
+      register: test_result
+      
+    - name: Remove .tox directory
+      shell: |
+        echo {{ SUDO_PASS }} | sudo -S rm -rf .tox
+      become: true
+      become_user: root
+      register: rm_tox_result
+
+    - name: Remove __pycache__ directory
+      shell: |
+        echo {{ SUDO_PASS }} | sudo -S rm -rf __pycache__
+      become: true
+      become_user: root
+      register: rm_pycache_result
+
+    - name: Remove hello.egg-info directory
+      shell: |
+        echo {{ SUDO_PASS }} | sudo -S rm -rf hello.egg-info
+      become: true
+      become_user: root
+      register: rm_egginfo_result
+
+    - name: Remove hello directory
+      shell: |
+        echo {{ SUDO_PASS }} | sudo -S rm -rf hello
+      become: true
+      become_user: root
+      register: rm_hello_result
+
+    - name: Remove tests directory
+      shell: |
+        echo {{ SUDO_PASS }} | sudo -S rm -rf tests
+      become: true
+      become_user: root
+      register: rm_tests_result
+      
+    - name: Check results
+      fail:
+        msg: "Docker pull, tag, tests or cleanup failed"
+      when: pull_result.rc != 0 or tag_result.rc != 0 or test_result.rc != 0 or rm_tox_result.rc != 0 or rm_pycache_result.rc != 0 or rm_egginfo_result.rc != 0 or rm_hello_result.rc != 0 or rm_tests_result.rc != 0

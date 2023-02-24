@@ -1,0 +1,5 @@
+[deployment-server]
+10.1.1.56
+
+[gitlab-runner]
+localhost ansible_connection=local

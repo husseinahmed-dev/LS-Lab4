@@ -1,0 +1,127 @@
+stages:
+  - build
+  - test
+  - release
+  - deploy
+# with ansible
+variables:
+  CONTAINER_COMPOSE_IMAGE: hello_djangoapp
+  CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+  CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
+##################### [BEGIN] MAIN BRANCH PIPELINE ###########################
+build:
+  image: docker:latest
+  stage: build
+  script:
+    - cd hussein-repo
+    - ansible-playbook ansible/playbooks/01_Build-Stage.yml -i ansible/inventory/hosts --private-key=ansible/files/id_rsa
+  tags:
+    - hussein-runner
+
+unit_test:
+  image: docker:latest
+  needs: [build]
+  stage: test
+  script:
+    - cd hussein-repo
+    - ansible-playbook ansible/playbooks/02_Test-Stage.yml -i ansible/inventory/hosts --private-key=ansible/files/id_rsa
+
+  tags:
+    - hussein-runner
+
+release-image:
+  image: docker:latest
+  needs: [unit_test]
+  stage: release
+  script:
+    - cd hussein-repo
+    - ansible-playbook ansible/playbooks/03_Release-Stage.yml -i ansible/inventory/hosts --private-key=ansible/files/id_rsa
+  only:
+    - main
+  tags:
+    - hussein-runner
+
+deploy-staging:
+  stage: deploy
+  needs: [release-image]
+  script:
+    - echo "Deploy to staging server"
+  environment:
+    name: staging
+    url: http://staging.hussein.com
+  only:
+    - main
+  tags:
+    - hussein-runner
+
+deploy-prod:
+  stage: deploy
+  needs: [release-image]
+  script:
+    - cd hussein-repo
+    - ansible-playbook ansible/playbooks/04_Deploy-Stage.yml -i ansible/inventory/hosts --private-key=ansible/files/id_rsa
+  only:
+    - main
+  tags:
+    - hussein-runner
+###################### [END] MAIN BRANCH PIPELINE ###########################
+##################### [BEGIN] DEV BRANCH PIPELINE ###########################
+build-dev:
+  image: docker:latest
+  stage: build
+  script:
+    - cd hussein-repo
+    - ansible-playbook ansible/playbooks/01_Build-Stage.yml -i ansible/inventory/hosts --private-key=ansible/files/id_rsa
+  only:
+    - dev
+  tags:
+    - hussein-runner
+
+unit_test-dev:
+  image: docker:latest
+  needs: [build-dev]
+  stage: test
+  script:
+    - cd hussein-repo
+    - ansible-playbook ansible/playbooks/02_Test-Stage.yml -i ansible/inventory/hosts --private-key=ansible/files/id_rsa
+  only:
+    - dev
+  tags:
+    - hussein-runner
+
+release-image-dev:
+  image: docker:latest
+  needs: [unit_test-dev]
+  stage: release
+  script:
+    - cd hussein-repo
+    - ansible-playbook ansible/playbooks/03_Release-Stage.yml -i ansible/inventory/hosts --private-key=ansible/files/id_rsa
+  only:
+    - dev
+  tags:
+    - hussein-runner
+
+deploy-staging-dev:
+  stage: deploy
+  needs: [release-image-dev]
+  script:
+    - echo "Deploy to staging server"
+  environment:
+    name: staging
+    url: http://staging.hussein.com
+  only:
+    - dev
+  tags:
+    - hussein-runner
+
+deploy-prod-dev:
+  stage: deploy
+  needs: [release-image-dev]
+  script:
+    - cd hussein-repo
+    - ansible-playbook ansible/playbooks/04_Deploy-Stage.yml -i ansible/inventory/hosts --private-key=ansible/files/id_rsa
+  only:
+    - dev
+  tags:
+    - hussein-runner
+###################### [END] DEV BRANCH PIPELINE ###########################
