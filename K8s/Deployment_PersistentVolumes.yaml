@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: large-systems-django-deployment
+  labels:
+    app: large-systems-django
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: large-systems-django
+      env: production
+  template:
+    metadata:
+      labels:
+        app: large-systems-django
+        env: production
+    spec:
+      containers:
+      - name: large-systems-django
+        image: ha33ona/python:test
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "1"
+          limits:
+            memory: "512Mi"
+            cpu: "1"
+        envFrom:
+        - configMapRef:
+            name: large-systems-django-configmap
+        volumeMounts:
+            - name: my-volume
+              mountPath: /data
+
+      volumes:
+        - name: my-volume
+          persistentVolumeClaim:
+            claimName: my-pvc
