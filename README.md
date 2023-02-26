@@ -38,7 +38,7 @@ This will remove the resources that were created by the chart.
 
 ## Dependencies
 This chart has the following dependencies:
-- Kubernetes 1.16+
+- Kubernetes 1.18+
 - Helm 3+
 
 ## Known Issues
