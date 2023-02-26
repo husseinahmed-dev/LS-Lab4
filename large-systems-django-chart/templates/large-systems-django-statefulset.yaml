@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-statefulset
+  labels:
+    app: large-systems-django
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: large-systems-django
+      env: production
+  serviceName: {{ .Release.Name }}-service
+  template:
+    metadata:
+      labels:
+        app: large-systems-django
+        env: production
+    spec:
+      containers:
+      - name: large-systems-django
+        image: {{ .Values.image }}
+        resources:
+          requests:
+            memory: "{{ .Values.resources.requests.memory }}"
+            cpu: "{{ .Values.resources.requests.cpu }}"
+          limits:
+            memory: "{{ .Values.resources.limits.memory }}"
+            cpu: "{{ .Values.resources.limits.cpu }}"
+        envFrom:
+        - configMapRef:
+            name: {{ .Release.Name }}-configmap
+        volumeMounts:
+          - name: my-volume
+            mountPath: /data
+      volumes:
+        - name: my-volume
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-pvc
+  volumeClaimTemplates:
+  - metadata:
+      name: my-volume
+    spec:
+      accessModes:
+        - ReadWriteMany
+      resources:
+        requests:
+          storage: "{{ .Values.pvc.storage }}"
