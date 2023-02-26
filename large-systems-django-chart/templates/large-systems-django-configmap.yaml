@@ -1,0 +1,8 @@
+# large-systems-django-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-configmap
+data:
+  LARGE_SYSTEMS_DJANGO_CONFIGMAP_value1: very
+  LARGE_SYSTEMS_DJANGO_CONFIGMAP_value2: cool
