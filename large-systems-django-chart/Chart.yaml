@@ -1,0 +1,22 @@
+apiVersion: v2
+name: large-systems-django
+description: A Helm chart for deploying large-systems-django StatefulSet
+
+# Declare the application version
+version: 1.0.0
+
+# Declare the required Kubernetes version
+kubeVersion: ">=1.18.0"
+
+# Declare the chart metadata
+appVersion: "1.0"
+maintainers:
+  - name: Hussein Ahmed Shahab Al-Khalissi
+    email: h.alkhalissi@innopolis.university
+# dependencies: {}
+
+# Declare the resources that this chart provides
+files:
+  - large-systems-django-statefulset.yaml
+  - large-systems-django-service.yaml
+  - large-systems-django-configmap.yaml
