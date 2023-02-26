@@ -7,13 +7,17 @@ The Large Systems Django app is a web application built with Python and Django t
 
 ## Installation
 To install this chart, first add the Helm repository:
+
 ```
 helm repo add large-systems-django https://example.com/charts
 ```
+
 Then, install the chart using 'helm install':
+
 ```
 helm install my-release large-systems-django/large-systems-django --values values.yaml
-``
+```
+
 You can customize the installation by providing a values.yaml file with any necessary configuration options. The chart includes some default values, which can be found in values.yaml in the chart repository.
 
 ## Configuring
@@ -23,9 +27,11 @@ If you need to update the configuration of the application itself, you can do so
 
 ## Uninstalling
 To uninstall the chart, use the helm uninstall command:
+
 ```
 helm uninstall my-release
 ```
+
 This will remove the resources that were created by the chart.
 
 ## Dependencies
