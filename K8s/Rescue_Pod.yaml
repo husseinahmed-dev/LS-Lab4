@@ -1,0 +1,20 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: rescue-pod
+spec:
+  containers:
+  - name: rescue-container
+    image: busybox
+    command: ["/bin/sh", "-c", "sleep 3600"]
+    stdin: true
+    tty: true
+    volumeMounts:
+    - name: my-volume
+      mountPath: /data
+  volumes:
+  - name: my-volume
+    persistentVolumeClaim:
+      claimName: my-volume-large-systems-django-statefulset-0
+  restartPolicy: Never
