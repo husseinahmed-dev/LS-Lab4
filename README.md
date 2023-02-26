@@ -11,13 +11,13 @@ The Large Systems Django app is a web application built with Python and Django t
 To install this chart, first add the Helm repository:
 
 ```
-helm repo add large-systems-django https://example.com/charts
+helm repo add large-systems-django https://husseinahmed-dev.github.io/LS-Lab4/large-systems-django-chart
 ```
 
 Then, install the chart using 'helm install':
 
 ```
-helm install my-release large-systems-django/large-systems-django --values values.yaml
+helm install my-large-systems-django large-systems-django/large-systems-django --version 1.0.0
 ```
 
 You can customize the installation by providing a values.yaml file with any necessary configuration options. The chart includes some default values, which can be found in values.yaml in the chart repository.
