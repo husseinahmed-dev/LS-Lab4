@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: large-systems-django-job
+spec:
+  template:
+    metadata:
+      name: large-systems-django-pod
+    spec:
+      containers:
+        - name: large-systems-django-container
+          image: busybox
+          command: ['sh', '-c', 'echo "Injecting Data into PV of the application with Job!" > /data/myfile.txt && cat /data/myfile.txt']
+          volumeMounts:
+            - name: my-volume
+              mountPath: /data
+      restartPolicy: Never
+      volumes:
+        - name: my-volume
+          persistentVolumeClaim:
+            claimName: my-volume-large-systems-django-statefulset-0
+  backoffLimit: 0
