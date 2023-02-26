@@ -3,7 +3,7 @@
 This Helm chart provides a simple way to deploy the Large Systems Django app in a Kubernetes cluster using a StatefulSet.
 
 ## Application Description
-The Large Systems Django app is a web application built with Python and Django that is designed to handle large-scale systems. The app is scalable and includes features such as authentication, authorization, and caching.
+The Large Systems Django app is a web application built with Python and Django that is designed to handle large-scale systems. The app is scalable and includes features such as authentication, authorization, and caching used for pentesting Kubernetes.
 
 ![](https://github.com/husseinahmed-dev/LS-Lab4/blob/main/Figures/Figure-92.png)
 
