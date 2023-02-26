@@ -1,0 +1,18 @@
+replicaCount: 1
+image: ha33ona/python:test
+resources:
+  limits:
+    cpu: "1"
+    memory: "128Mi"
+  requests:
+    cpu: "1"
+    memory: "128Mi"
+service:
+  type: NodePort
+  port: 80
+  targetPort: 8000
+configMap:
+  value1: very
+  value2: cool
+pvc:
+  storage: 128Mi
