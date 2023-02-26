@@ -24,3 +24,4 @@ spec:
                 claimName: my-volume-large-systems-django-statefulset-0
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 3
+  
