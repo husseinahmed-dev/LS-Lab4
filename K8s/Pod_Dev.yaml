@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: large-systems-django-development
+  labels:
+    app: large-systems-django-development
+spec:
+  containers:
+  - name: large-systems-django-development
+    image: ha33ona/python:main
+    ports:
+    - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: large-systems-django-productidevelopment
+spec:
+  type: NodePort
+  selector:
+    app: large-systems-django-development
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8000
