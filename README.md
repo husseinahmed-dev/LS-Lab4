@@ -1,23 +1,24 @@
-[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/large-systems-django)](https://artifacthub.io/packages/search?repo=large-systems-django) 
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/large-systems-django)](https://artifacthub.io/packages/search?repo=large-systems-django)
 # Custom Django Application for K8s & Helm Chart Learning
 This Helm chart provides a simple way to deploy the Large Systems Django app in a Kubernetes cluster using a StatefulSet.
 
 ## Application Description
-The Large Systems Django app is a web application built with Python and Django that is designed to handle large-scale systems. The app is scalable and includes features such as authentication, authorization, and caching.
+The Large Systems Django app is a web application built with Python and Django that is designed to handle large-scale systems. The app is scalable and includes features such as authentication, authorization, and caching used for pentesting Kubernetes.<a href="https://github.com/husseinahmed-dev/LS-Lab4"><img src="https://cdn-icons-png.flaticon.com/512/2716/2716612.png" width="30" height="30"></a>
 
 
+![](https://github.com/husseinahmed-dev/LS-Lab4/blob/main/Figures/Figure-92.png)
 
 ## Installation
 To install this chart, first add the Helm repository:
 
 ```
-helm repo add large-systems-django https://example.com/charts
+helm repo add large-systems-django https://husseinahmed-dev.github.io/LS-Lab4/large-systems-django-chart
 ```
 
 Then, install the chart using 'helm install':
 
 ```
-helm install my-release large-systems-django/large-systems-django --values values.yaml
+helm install my-large-systems-django large-systems-django/large-systems-django --version 1.0.0
 ```
 
 You can customize the installation by providing a values.yaml file with any necessary configuration options. The chart includes some default values, which can be found in values.yaml in the chart repository.
@@ -38,7 +39,7 @@ This will remove the resources that were created by the chart.
 
 ## Dependencies
 This chart has the following dependencies:
-- Kubernetes 1.16+
+- Kubernetes 1.18+
 - Helm 3+
 
 ## Known Issues
