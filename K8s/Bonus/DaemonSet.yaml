@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: large-systems-django-daemonset
+  labels:
+    app: large-systems-django
+spec:
+  selector:
+    matchLabels:
+      app: large-systems-django
+      env: production
+  template:
+    metadata:
+      labels:
+        app: large-systems-django
+        env: production
+    spec:
+      containers:
+      - name: large-systems-django
+        image: ha33ona/python:test
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "1"
+          limits:
+            memory: "128Mi"
+            cpu: "1"
+        envFrom:
+        - configMapRef:
+            name: large-systems-django-configmap
+        volumeMounts:
+        - name: my-volume
+          mountPath: /data
+      volumes:
+      - name: my-volume
+        persistentVolumeClaim:
+          claimName: my-pvc
